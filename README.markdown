@@ -135,6 +135,14 @@ production:
 
 `require 'ripple/railtie'` from your `config/application.rb` file to complete the integration.
 
+## Rake Tasks
+
+Ripple provides a number of rake tasks out of the box to help make administering Riak in development and test easier. To include them, just add the following to the top of you Rake file after all your other requires:
+
+``` rake
+require 'ripple/tasks'
+```
+
 
 ## How to Contribute
 
