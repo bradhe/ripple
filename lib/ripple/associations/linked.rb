@@ -46,18 +46,14 @@ module Ripple
         @owner.robject.links.select(&@reflection.link_filter)
       end
 
-      def robjects
-        walk_result = begin
-          @owner.robject.walk(*Array(@reflection.link_spec)).first || []
-        rescue
-          []
-        end
+      def client
+        client = @owner.robject.bucket.client
+      end
 
-        # We can get more robject results that we have links when there is conflict,
-        # since link-walking returns the robjects for the union of all sibling links.
-        # Here, we filter out robjects that should not be included.
-        walk_result.select do |robject|
-          links.include?(robject.to_link(@reflection.link_tag))
+      def robjects
+        links.map do |link|
+          bucket = client.bucket(link.bucket)
+          bucket.get(link.key)
         end
       end
     end
