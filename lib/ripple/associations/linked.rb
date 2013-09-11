@@ -51,10 +51,16 @@ module Ripple
       end
 
       def robjects
-        links.map do |link|
-          bucket = client.bucket(link.bucket)
-          bucket.get(link.key)
+        objs = links.map do |link|
+          begin
+            bucket = client.bucket(link.bucket)
+            bucket.get(link.key)
+          rescue Riak::HTTPFailedRequest
+            # If we can't find a given link, let's not crap our pants.
+          end
         end
+
+        objs.compact
       end
     end
   end
